@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Ahorcado</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div style="text-align:center; margin: 50px 0px; height: 20px;">
+      <h1 class="titulo">Ahorcado</h1>
+    </div>
+    <canvas width="1200px" height="800px"></canvas>
+    <div class="keyboard">
+
+      <div class="word">
+          <ul id="etiquetaPalabra"></ul>
+      </div>
+   
+      <div id="etiquetaLetrasErr" class="other_letters"></div>
+      
+    </div>
+    
+    <div class="actions">
+      <button class="btn_ini" id="iniciar-juego">INICIAR JUEGO</button>
+      <button class="btn_agregar" id="nueva-palabra">AGREGAR PALABRA</button> 
+    </div>
+
+    <footer>
+      <p style="background-color: lightgray;">Desarrolló: Nadia Sámano</p>
+    </footer>
+    
+    <script type="text/javascript" src="js/canvas.js"></script>
+    <script type="text/javascript" src="js/ahorcado.js"></script>
+  </body>
+</html>
