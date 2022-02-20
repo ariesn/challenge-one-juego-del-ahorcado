@@ -154,7 +154,7 @@
   position: absolute;
   width: 688px;
   height: 67px;
-  left: 376px;
+  left: 346px;
   top: 886px;
 }
 
@@ -175,6 +175,22 @@
   justify-content: space-between;
 }
 
+.keyboard_b {
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px;
+
+  position: absolute;
+  width: 464px;
+  height: 152px;
+  left: 488px;
+  top: 628px;
+
+  justify-content: space-between;
+}
 
 .word {
   /* Word */
@@ -263,4 +279,19 @@ ul {
   color: red;
   font-weight: bold;
   font-size: x-large;
+}
+
+
+.campo{
+	margin: 0;
+	padding-bottom: 1em;
+  height: 50px;
+	border: 1px solid #ccc;
+	padding: .7em;
+	width: 100%;
+}
+
+
+.invisible {
+	display: none;
 }

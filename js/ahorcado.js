@@ -1,12 +1,32 @@
 var btnIniciarJuego = document.querySelector("#iniciar-juego");
 var btnNuevaPalabra = document.querySelector("#nueva-palabra");
-var etiquetaLetrasError = document.querySelector("#etiquetaLetrasErr");
+var etiquetaOtrasLetras = document.querySelector("#etiquetaOtrasLetras");
+var bloqueAgregarPalabra = document.querySelector("#dv_agregar_palabra");
+var inputPalabra = document.querySelector("#agregar_palabra");
+var btnGuardarPalabra  = document.querySelector("#guardar-palabra");
 
 var palabraSecreta = "";
 var letrasError = [];
 var letrasAcertadas = [];
 var listaPalabras = ["ALURA","ORACLE","DESARROLLO", "CURSO","EXCELENTE","GENIAL","NARANJA","BIEN",
 "AGRADABLE","MAGIA","ONLINE","LOGICA","LIDERAZGO","ORGANIZACION","COMUNIDAD","TALENTO","ACTITUD"];
+
+// Verificando si hay palabras en almacenamiento local
+if (window.localStorage.length > 0) {
+    var storagePalabras = window.localStorage;    
+    var palabra = "";
+
+    for (var i = 0; i < storagePalabras.length; i++) {
+        palabra = storagePalabras.getItem(storagePalabras.key(i));
+        if (!listaPalabras.includes(palabra)) {
+            listaPalabras.push(palabra);
+        } else {
+            break;
+        }
+    }
+
+}
+
 
 var _listenerKeydown = 
 function(event) {
@@ -45,9 +65,9 @@ btnIniciarJuego.addEventListener("click", function(event) {
 
     letrasError = [];
     letrasAcertadas = [];
-    etiquetaLetrasError.textContent = "";
+    etiquetaOtrasLetras.textContent = "";
 
-    reiniciarEstilos();
+    reiniciarEstilosBtnIni();
      
     crear_tablero();
     
@@ -68,6 +88,7 @@ function elegirPalabraSecreta() {
 }
 
 function mostrarGuionesPalabra() {
+    // Los guiones consisten en un estilo de li con borde inferior
     var nLetras = palabraSecreta.length;
     var ul = document.querySelector("#etiquetaPalabra");
     ul.innerHTML = "";
@@ -82,16 +103,25 @@ function mostrarGuionesPalabra() {
 }
 
 
-function validarTecla(contenido){
-    // Expresion para detectar letras mayusculas    
-    var expresion = new RegExp(/[A-Z]/);
-    if (expresion.test(contenido) && contenido.length == 1){
+function validarTexto(texto){
+    // Expresion para detectar letras mayusculas y letra Ñ   
+    var expresion = new RegExp(/[A-Z\u00d1]/);
+    if (expresion.test(texto)){
         //mayusculas
         return true;
     } else {
         return false;
     }
     
+}
+
+function validarTecla(contenido){
+    // Esto permite omitir texto de teclas de funcion (ej: F12)
+    if (contenido.length == 1) {
+        return validarTexto(contenido);
+    } else {
+        return false;
+    }
 }
 
 function letraCorrecta(letra) {
@@ -114,11 +144,12 @@ function letraCorrecta(letra) {
 
 function letraIncorrecta(letra) {
     letrasError.push(letra);
-    etiquetaLetrasError.textContent = etiquetaLetrasError.textContent + letra;
+    etiquetaOtrasLetras.textContent = etiquetaOtrasLetras.textContent + letra;
     dibujarAhorcado(letrasError.length);
 }
 
 function revisarEstiloLi (opcion) {
+    //Esta funcion permite agregar o quitar el estilo de error (guiones en rojo)
     var li = document.querySelectorAll("li");
     for(var i = 0; i<palabraSecreta.length; i++) {      
         if (opcion == "agregar") {
@@ -132,8 +163,8 @@ function revisarEstiloLi (opcion) {
 function verificaGanador() {
 
     if (letrasAcertadas.length == palabraSecreta.length){
-        etiquetaLetrasError.textContent = "Ganaste, Felicidades!";
-        etiquetaLetrasError.classList.add("gano");
+        etiquetaOtrasLetras.textContent = "Ganaste, Felicidades!";
+        etiquetaOtrasLetras.classList.add("gano");
         removerListener();
         btnIniciarJuego.focus();
     }
@@ -143,21 +174,97 @@ function verificaGanador() {
 function verificarFinJuego() {
 
     if (letrasError.length == 10){
-        etiquetaLetrasError.textContent = "Fin del juego!";
-        etiquetaLetrasError.classList.add("perdio");
+        etiquetaOtrasLetras.textContent = "Fin del juego!";
+        etiquetaOtrasLetras.classList.add("perdio");
         removerListener();
     }
 }
 
 function removerListener() {
+    //Remueve el listener de deteccion de letras tecleadas
     document.removeEventListener("keydown", _listenerKeydown, true);
 }
 
-function reiniciarEstilos() {
-    etiquetaLetrasError.classList.remove("gano");
-    etiquetaLetrasError.classList.remove("perdio");
-    btnIniciarJuego.classList.remove("btn_ini");
-    btnIniciarJuego.classList.add("btn_ini_bottom");
-    btnNuevaPalabra.classList.remove("btn_agregar");
-    btnNuevaPalabra.classList.add("btn_agregar_bottom");
+function reiniciarEstilosBtnIni() {
+    removerEstiloOtrasLetras();
+    ocultarBtnIniMid();
+    mostrarBtnIniBottom();
+    ocultarBtnNuevaPalabraMid();
+    mostrarBtnNuevaPalabraBottom();
+    bloqueAgregarPalabra.classList.add("invisible");
 }
+
+
+
+function agregarNuevaPalabra() {
+    
+    preparar_area();
+    
+}
+
+function preparar_area() {
+    var ul = document.querySelector("#etiquetaPalabra");
+    bloqueAgregarPalabra.classList.remove("invisible");
+    inputPalabra.classList.remove("invisible");
+
+    ocultarBtnGuardarPalabraMid();
+    mostrarBtnGuardarPalabraBottom();
+    ocultarBtnIniMid();
+    ocultarBtnIniBottom();
+    ocultarBtnNuevaPalabraMid();
+    mostrarBtnNuevaPalabraBottom();
+ 
+    ul.innerHTML = "";
+    crear_tablero();
+    removerListener();
+    inputPalabra.focus();
+
+}
+
+function guardarPalabra() {
+    var mensajeSalida = "";
+    mensajeSalida = agregarPalabra();
+    ocultarBtnGuardarPalabraBottom();
+    mostrarBtnIniBottom();
+    removerEstiloOtrasLetras();
+    bloqueAgregarPalabra.classList.add("invisible");
+    etiquetaOtrasLetras.textContent = mensajeSalida;
+    inputPalabra.value = "";
+}
+
+function almacenarEnLocal (nuevaPalabra){
+    var almacenamientoLocal = window.localStorage;
+
+    almacenamientoLocal.setItem(nuevaPalabra,nuevaPalabra);
+    return true;
+}
+
+function agregarPalabra() {
+    var textoPalabra = inputPalabra.value;
+    var mensaje = "";
+    var textoValido = validarTexto(textoPalabra);
+    if (textoValido) {
+        if(!listaPalabras.includes(textoPalabra)) {
+            listaPalabras.push(textoPalabra);
+            if (almacenarEnLocal(textoPalabra)){
+                mensaje = "Se agrego palabra " + textoPalabra;
+            } else {
+                mensaje = "La palabra no se guardo en localStorage";
+            }
+        } else {
+            mensaje = "La palabra ya existe";
+        }
+    } else {
+        mensaje = "La palabra no es válida";
+    }
+
+    return mensaje;
+
+}
+
+btnNuevaPalabra.onclick = agregarNuevaPalabra;
+
+btnGuardarPalabra.onclick = guardarPalabra;
+
+
+
