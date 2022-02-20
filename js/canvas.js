@@ -69,3 +69,9 @@ function dibujarAhorcado(seccion) {
     pincel.stroke();
 
 }
+
+function dibujarMensaje(texto, x, y, color) {
+    pincel.font="20px Georgia";
+    pincel.fillStyle=color;
+    pincel.fillText(texto, x, y);  
+}

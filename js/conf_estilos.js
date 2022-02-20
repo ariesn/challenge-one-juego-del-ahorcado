@@ -1,8 +1,3 @@
-function removerEstiloOtrasLetras() {
-    etiquetaOtrasLetras.classList.remove("gano");
-    etiquetaOtrasLetras.classList.remove("perdio");
-}
-
 function mostrarBtnIniMid() {
     btnIniciarJuego.classList.remove("invisible");
     btnIniciarJuego.classList.add("btn_ini");

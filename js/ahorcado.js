@@ -163,8 +163,8 @@ function revisarEstiloLi (opcion) {
 function verificaGanador() {
 
     if (letrasAcertadas.length == palabraSecreta.length){
-        etiquetaOtrasLetras.textContent = "Ganaste, Felicidades!";
-        etiquetaOtrasLetras.classList.add("gano");
+        
+        dibujarMensaje("Ganaste, Felicidades!", 650, 350, "green");
         removerListener();
         btnIniciarJuego.focus();
     }
@@ -174,8 +174,8 @@ function verificaGanador() {
 function verificarFinJuego() {
 
     if (letrasError.length == 10){
-        etiquetaOtrasLetras.textContent = "Fin del juego!";
-        etiquetaOtrasLetras.classList.add("perdio");
+
+        dibujarMensaje("Fin del juego!", 650, 350, "red");
         removerListener();
     }
 }
@@ -186,7 +186,6 @@ function removerListener() {
 }
 
 function reiniciarEstilosBtnIni() {
-    removerEstiloOtrasLetras();
     ocultarBtnIniMid();
     mostrarBtnIniBottom();
     ocultarBtnNuevaPalabraMid();
@@ -226,7 +225,6 @@ function guardarPalabra() {
     mensajeSalida = agregarPalabra();
     ocultarBtnGuardarPalabraBottom();
     mostrarBtnIniBottom();
-    removerEstiloOtrasLetras();
     bloqueAgregarPalabra.classList.add("invisible");
     etiquetaOtrasLetras.textContent = mensajeSalida;
     inputPalabra.value = "";
